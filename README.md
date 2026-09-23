@@ -32,7 +32,7 @@ boundary, and walks the opening range with a stage bar and a calm voice.
 
 ## Download
 
-**[Download Trading Clock for Mac](https://github.com/laldinsoft/trading-clock/releases/latest/download/TradingClock.dmg)** (about 3 MB, macOS 14 or later, Apple Silicon or Intel)
+**[Download Trading Clock for Mac](https://github.com/laldinsoft/trading-clock/releases/latest/download/TradingClock.dmg)** (under 2 MB, macOS 14 or later, Apple Silicon or Intel)
 
 1. Open the downloaded `TradingClock.dmg`.
 2. Drag **Trading Clock** onto the **Applications** folder in that window.
