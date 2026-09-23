@@ -41,7 +41,9 @@ gh release create vX.Y.Z dist/TradingClock.dmg dist/TradingClock.dmg.sha256 \
 
 ## Repository secrets
 
-The same five secrets as DayScribe, on this repository or the organisation:
+The same five secrets as DayScribe, on this repository or the organisation.
+`scripts/set-release-secrets.sh` sets all five from the `.p12` and `.p8` in
+`~/keys`, asking only for the `.p12` password and the Issuer ID:
 
 | Secret | Value |
 | --- | --- |
