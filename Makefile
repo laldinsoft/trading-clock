@@ -1,4 +1,4 @@
-.PHONY: all build run test install sounds speech clean
+.PHONY: all build run test install release sounds speech clean
 
 all: build
 
@@ -19,6 +19,10 @@ install: build
 	rm -rf "/Applications/Trading Clock.app"
 	cp -R "dist/Trading Clock.app" /Applications/
 	@echo "Installed. Open it from Applications, then enable Launch at Login from its menu."
+
+## Build, sign with Developer ID, notarize, and wrap in dist/TradingClock.dmg.
+release:
+	./scripts/release.sh
 
 ## Re-render the chimes with SuperCollider.
 sounds:

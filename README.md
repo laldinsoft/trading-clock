@@ -1,5 +1,9 @@
 # Trading Clock
 
+[![CI](https://github.com/laldinsoft/trading-clock/actions/workflows/ci.yml/badge.svg)](https://github.com/laldinsoft/trading-clock/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Platform](https://img.shields.io/badge/platform-macOS%2014%2B%20Apple%20Silicon%20%26%20Intel-lightgrey)
+
 A small, native macOS clock for New York session traders. It floats above every
 window, including full-screen charts, resizes to whatever corner you give it, and
 knows the NYSE day: it changes colour with the session, rings a soft bell at each
@@ -26,7 +30,17 @@ boundary, and walks the opening range with a stage bar and a calm voice.
 - **Private.** No account, no telemetry. The only network call is the optional
   calendar check, and only if you paste a key.
 
-## Install
+## Download
+
+**[Download Trading Clock for Mac](https://github.com/laldinsoft/trading-clock/releases/latest/download/TradingClock.dmg)** (about 3 MB, macOS 14 or later, Apple Silicon or Intel)
+
+1. Open the downloaded `TradingClock.dmg`.
+2. Drag **Trading Clock** onto the **Applications** folder in that window.
+3. Open Trading Clock from Applications. The clock appears top-right and a clock icon appears in the menu bar.
+
+The download is signed by Laldinsoft Ltd and notarized by Apple, so it opens normally. To update, download the new version and replace the app in Applications. To uninstall, quit it from its menu and move it to the Trash.
+
+## Build from source
 
 Requirements: macOS 14 or later, Xcode or the Command Line Tools.
 
@@ -36,14 +50,14 @@ cd trading-clock
 make install        # builds dist/Trading Clock.app and copies it to /Applications
 ```
 
-Open **Trading Clock** from Applications. The clock appears top-right; a clock icon
-appears in the menu bar. From that menu (or a right-click on the clock) you can
-mute, toggle click-through, open Settings, test every sound, simulate any event
-ten seconds before it happens, and turn on Launch at Login.
-
 `make build ARCH=host` is quicker while developing; `make run` builds and launches.
+See [RELEASING.md](RELEASING.md) for the signed, notarized release process.
 
 ## Using it
+
+From the menu bar icon (or a right-click on the clock) you can mute, toggle
+click-through, open Settings, test every sound, simulate any event ten seconds
+before it happens, tour the whole day in two minutes, and turn on Launch at Login.
 
 | Action | How |
 |---|---|
