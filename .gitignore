@@ -1,0 +1,15 @@
+# Build output
+.build/
+.swiftpm/
+dist/
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+
+# Raw renders; the trimmed, normalised files in Resources/ are committed
+sounds/out/
+
+# Editor and OS noise
+.DS_Store
+.idea/
+.vscode/

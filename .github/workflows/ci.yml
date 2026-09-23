@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check shell syntax
+        run: bash -n scripts/*.sh sounds/*.sh
+      - name: Unit tests
+        run: swift test
+      - name: Build universal app
+        run: ./scripts/build.sh
+      - name: Render layout snapshots
+        run: |
+          mkdir -p snapshots
+          APP="dist/Trading Clock.app/Contents/MacOS/TradingClock"
+          "$APP" --snapshot snapshots/default.png 420 150
+          "$APP" --simulate range_10 100 --snapshot snapshots/range.png 700 220
+      - uses: actions/upload-artifact@v4
+        with:
+          name: snapshots
+          path: snapshots
