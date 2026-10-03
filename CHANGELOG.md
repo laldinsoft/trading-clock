@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-10-03
 
 - App icon: a 24-hour dial whose rim is coloured by the New York sessions,
   with its hand on 09:30, the open. It is drawn in code by
