@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B%20Apple%20Silicon%20%26%20Intel-lightgrey)
 
+<img src="docs/icon.png" width="128" align="right" alt="Trading Clock icon">
+
 A small, native macOS clock for New York session traders. It floats above every
 window, including full-screen charts, resizes to whatever corner you give it, and
 knows the NYSE day: it changes colour with the session, rings a soft bell at each
@@ -95,6 +97,7 @@ Two optional layers sit on top of the rule-based NYSE calendar:
 | `Resources/Sounds` | The chimes, 44.1 kHz mono WAV, peaks at -14 dBFS. |
 | `Resources/Speech` | The spoken phrases, peaks at -16 dBFS. |
 | `sounds/` | How the audio is made: SuperCollider pieces and `render.sh` for the chimes, `speak.sh` for the phrases. |
+| `icon/` | `make-icon.swift` draws the icon in code; `build-icns.sh` (`make icon`) packs `Resources/AppIcon.icns`. |
 | `scripts/` | `build.sh` assembles and signs the app; `screenshot.sh` captures the live window. |
 
 ### Sounds

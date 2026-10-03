@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- App icon: a 24-hour dial whose rim is coloured by the New York sessions,
+  with its hand on 09:30, the open. It is drawn in code by
+  `icon/make-icon.swift`, and `make icon` regenerates `Resources/AppIcon.icns`
+  and `docs/icon.png`.
+
 ## 0.1.0 — 2026-09-23
 
 First release.

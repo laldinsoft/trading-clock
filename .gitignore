@@ -9,6 +9,9 @@ xcuserdata/
 # Raw renders; the trimmed, normalised files in Resources/ are committed
 sounds/out/
 
+# Icon working files; Resources/AppIcon.icns and docs/icon.png are committed
+icon/out/
+
 # Editor and OS noise
 .DS_Store
 .idea/

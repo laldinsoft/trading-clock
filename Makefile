@@ -1,4 +1,4 @@
-.PHONY: all build run test install release sounds speech clean
+.PHONY: all build run test install release icon sounds speech clean
 
 all: build
 
@@ -24,6 +24,10 @@ install: build
 release:
 	./scripts/release.sh
 
+## Redraw the app icon into Resources/AppIcon.icns and docs/icon.png.
+icon:
+	./icon/build-icns.sh
+
 ## Re-render the chimes with SuperCollider.
 sounds:
 	./sounds/render.sh
@@ -33,4 +37,4 @@ speech:
 	./sounds/speak.sh
 
 clean:
-	rm -rf .build dist sounds/out
+	rm -rf .build dist sounds/out icon/out
