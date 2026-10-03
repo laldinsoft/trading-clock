@@ -9,7 +9,7 @@ jobs:
   test-and-build:
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Check shell syntax
         run: bash -n scripts/*.sh sounds/*.sh
       - name: Unit tests
@@ -22,7 +22,7 @@ jobs:
           APP="dist/Trading Clock.app/Contents/MacOS/TradingClock"
           "$APP" --snapshot snapshots/default.png 420 150
           "$APP" --simulate range_10 100 --snapshot snapshots/range.png 700 220
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: snapshots
           path: snapshots

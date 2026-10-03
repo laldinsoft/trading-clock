@@ -15,7 +15,7 @@ jobs:
     name: Build, notarize and publish
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # A release built on a Mac with `make release` and published by hand creates
       # the same tag; do nothing in that case.
