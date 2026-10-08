@@ -9,7 +9,8 @@
 A small, native macOS clock for New York session traders. It floats above every
 window, including full-screen charts, resizes to whatever corner you give it, and
 knows the NYSE day: it changes colour with the session, rings a soft bell at each
-boundary, and walks the opening range with a stage bar and a calm voice.
+boundary, walks the opening range with a stage bar and a calm voice, and keeps
+an eye on London and Tokyo beside the session line.
 
 ![Trading Clock during the opening range](docs/range.png)
 
@@ -38,9 +39,11 @@ boundary, and walks the opening range with a stage bar and a calm voice.
   calendar checks: Polygon.io if you paste a key, and the official UK and Japanese
   holiday lists if you turn that on.
 
+![London and Tokyo chips beside the session line in pre-market](docs/markets.png)
+
 ## Download
 
-**[Download Trading Clock for Mac](https://github.com/laldinsoft/trading-clock/releases/latest/download/TradingClock.dmg)** (under 2 MB, macOS 14 or later, Apple Silicon or Intel)
+**[Download Trading Clock for Mac](https://github.com/laldinsoft/trading-clock/releases/latest/download/TradingClock.dmg)** (about 2.3 MB, macOS 14 or later, Apple Silicon or Intel)
 
 1. Open the downloaded `TradingClock.dmg`.
 2. Drag **Trading Clock** onto the **Applications** folder in that window.
