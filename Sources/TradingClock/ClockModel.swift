@@ -31,6 +31,9 @@ final class ClockModel {
 
     var calendar = NYSECalendar(overrides: CalendarOverridesFile.load())
     let sync = CalendarSync()
+    let worldSync = WorldHolidaySync()
+    /// London and Tokyo with their manual and online overrides applied.
+    private(set) var worldMarkets = WorldMarket.all
     let settings: AppSettings
     let sounds: SoundPlayer
     private var timer: DispatchSourceTimer?
@@ -58,13 +61,18 @@ final class ClockModel {
         self.settings = settings
         self.sounds = SoundPlayer(settings: settings)
         sync.onChange = { [weak self] in self?.reloadCalendar() }
+        worldSync.onChange = { [weak self] in self?.reloadCalendar() }
         reloadCalendar()
         tick()
     }
 
-    /// Manual overrides file plus whatever the online check last returned.
+    /// Manual overrides file plus whatever the online checks last returned.
     func reloadCalendar() {
         calendar = NYSECalendar(overrides: CalendarOverridesFile.load().merged(with: sync.remote))
+        let manual = CalendarOverridesFile.loadWorld()
+        worldMarkets = WorldMarket.Exchange.allCases.map { e in
+            WorldMarket(e, overrides: (manual[e] ?? .init()).layered(over: worldSync.remote[e] ?? .init()))
+        }
         tick()
     }
 
@@ -77,6 +85,7 @@ final class ClockModel {
         t.resume()
         timer = t
         sync.start()
+        worldSync.start()
     }
 
     func stop() { timer?.cancel(); timer = nil }
@@ -137,7 +146,7 @@ final class ClockModel {
         nextBoundary = calendar.nextBoundary(after: now)
         countdownLine = nextBoundary.map { Countdown.line(to: $0, from: now) } ?? ""
         statusLine = Self.status(phase: phase, session: session, day: day, holiday: holidayName)
-        worldChips = WorldMarket.all.filter(settings.shows).map { WorldChip(market: $0, now: now) }
+        worldChips = worldMarkets.filter(settings.shows).map { WorldChip(market: $0, now: now) }
 
         guard let previous else { return }
         // Only announce what fell inside a normal tick. After sleep or a simulation
@@ -207,5 +216,15 @@ enum CalendarOverridesFile {
         guard let data = try? Data(contentsOf: url),
               let o = try? JSONDecoder().decode(NYSECalendar.Overrides.self, from: data) else { return .init() }
         return o
+    }
+
+    /// The optional `"london"` and `"tokyo"` objects in the same file, each with the
+    /// same three lists as NYSE. `earlyClose` means 12:30 in London, morning only in Tokyo.
+    static func loadWorld() -> [WorldMarket.Exchange: NYSECalendar.Overrides] {
+        struct World: Decodable { var london: NYSECalendar.Overrides?; var tokyo: NYSECalendar.Overrides? }
+        guard let data = try? Data(contentsOf: url), let w = try? JSONDecoder().decode(World.self, from: data) else { return [:] }
+        var out: [WorldMarket.Exchange: NYSECalendar.Overrides] = [:]
+        out[.london] = w.london; out[.tokyo] = w.tokyo
+        return out
     }
 }

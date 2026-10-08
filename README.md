@@ -34,8 +34,9 @@ boundary, and walks the opening range with a stage bar and a calm voice.
   pulled from Polygon.io with a free key, or added by hand.
 - **Stays out of the way.** Never takes focus from the chart, optional click-through,
   adjustable opacity, on every Space. No Dock icon; a menu bar clock holds the menu.
-- **Private.** No account, no telemetry. The only network call is the optional
-  calendar check, and only if you paste a key.
+- **Private.** No account, no telemetry. The only network calls are the optional
+  calendar checks: Polygon.io if you paste a key, and the official UK and Japanese
+  holiday lists if you turn that on.
 
 ## Download
 
@@ -79,7 +80,7 @@ default every event chimes, and only the open and the four range stages speak.
 
 ### Calendar overrides
 
-Two optional layers sit on top of the rule-based NYSE calendar:
+Optional layers sit on top of the rule-based calendars:
 
 1. **Online check.** Paste a free [Polygon.io](https://polygon.io) key in Settings.
    The app fetches upcoming closures and early closes at launch and every six
@@ -91,6 +92,21 @@ Two optional layers sit on top of the rule-based NYSE calendar:
    ```
 
    `open` forces a day open when a rule or the feed says otherwise.
+
+   London and Tokyo take the same three lists inside their own objects. `earlyClose`
+   means a 12:30 close in London and the morning session only in Tokyo:
+
+   ```json
+   { "closed": [], "london": { "closed": ["2027-06-04"] }, "tokyo": { "earlyClose": ["2027-12-30"] } }
+   ```
+
+3. **Official UK and Japanese lists.** Settings ▸ World markets ▸ *Check official
+   holiday lists daily* reads [GOV.UK's bank holidays](https://www.gov.uk/bank-holidays.json)
+   and the [Japanese Cabinet Office's holiday list](https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv).
+   No key is needed. For every year a list covers it replaces the rules, which is
+   how one-off days such as a coronation or a moved bank holiday get in. Manual
+   entries still win. Polygon.io (now Massive) only lists US exchanges, so it
+   can't do this.
 
 ## Layout
 

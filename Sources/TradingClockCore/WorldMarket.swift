@@ -14,16 +14,20 @@ public struct WorldMarket: Sendable, Identifiable {
     /// Settings label: city and exchange.
     public var title: String { exchange == .london ? "London (LSE)" : "Tokyo (TSE)" }
     let calendar: Calendar
+    /// Manual and online corrections: extra closures, half days (London 12:30, Tokyo
+    /// morning session only), and rule holidays that are not observed.
+    public let overrides: NYSECalendar.Overrides
 
-    public init(_ exchange: Exchange) {
+    public init(_ exchange: Exchange, overrides: NYSECalendar.Overrides = .init()) {
         self.exchange = exchange
+        self.overrides = overrides
         var c = Calendar(identifier: .gregorian)
         c.timeZone = TimeZone(identifier: exchange == .london ? "Europe/London" : "Asia/Tokyo")!
         c.locale = Locale(identifier: "en_US_POSIX")
         calendar = c
     }
 
-    public static let all = Exchange.allCases.map(WorldMarket.init)
+    public static let all = Exchange.allCases.map { WorldMarket($0) }
 
     // MARK: Days and windows
 
@@ -37,19 +41,24 @@ public struct WorldMarket: Sendable, Identifiable {
         calendar.date(from: DateComponents(year: day.year, month: day.month, day: day.day, hour: hour, minute: minute))!
     }
 
-    public func isTradingDay(_ day: Day) -> Bool { !day.isWeekend && holidayName(day) == nil }
+    public func isTradingDay(_ day: Day) -> Bool {
+        if overrides.open.contains(day.description) { return !day.isWeekend }
+        if overrides.closed.contains(day.description) { return false }
+        return !day.isWeekend && holidayName(day) == nil
+    }
 
     /// Continuous trading windows on a local day; two for Tokyo's lunch break, none when closed.
     public func windows(on day: Day) -> [DateInterval] {
         guard isTradingDay(day) else { return [] }
+        let halfDay = overrides.earlyClose.contains(day.description)
         switch exchange {
         case .london:
             // 08:00–16:30, or 12:30 on Christmas Eve and New Year's Eve.
-            let halfDay = (day.month == 12 && (day.day == 24 || day.day == 31))
-            return [DateInterval(start: at(day, 8, 0), end: halfDay ? at(day, 12, 30) : at(day, 16, 30))]
+            let rule = day.month == 12 && (day.day == 24 || day.day == 31)
+            return [DateInterval(start: at(day, 8, 0), end: halfDay || rule ? at(day, 12, 30) : at(day, 16, 30))]
         case .tokyo:
-            return [DateInterval(start: at(day, 9, 0), end: at(day, 11, 30)),
-                    DateInterval(start: at(day, 12, 30), end: at(day, 15, 30))]
+            let morning = DateInterval(start: at(day, 9, 0), end: at(day, 11, 30))
+            return halfDay ? [morning] : [morning, DateInterval(start: at(day, 12, 30), end: at(day, 15, 30))]
         }
     }
 
@@ -82,7 +91,7 @@ public struct WorldMarket: Sendable, Identifiable {
             return Status(state: .lunch, changeAt: w.start, breaksForLunch: false, holiday: nil)
         }
         return Status(state: .closed, changeAt: w.start, breaksForLunch: false,
-                      holiday: today.isWeekend ? nil : holidayName(today))
+                      holiday: today.isWeekend || isTradingDay(today) ? nil : holidayName(today) ?? "Holiday")
     }
 
     /// Chip text in New York time: "closes 11:30", "lunch 22:30", "back 23:30",

@@ -14,6 +14,13 @@ public struct NYSECalendar: Sendable {
         public init(closed: [String] = [], earlyClose: [String] = [], open: [String] = []) {
             self.closed = closed; self.earlyClose = earlyClose; self.open = open
         }
+        /// Any list may be left out of the file.
+        public init(from decoder: Decoder) throws {
+            let c = try decoder.container(keyedBy: CodingKeys.self)
+            closed = try c.decodeIfPresent([String].self, forKey: .closed) ?? []
+            earlyClose = try c.decodeIfPresent([String].self, forKey: .earlyClose) ?? []
+            open = try c.decodeIfPresent([String].self, forKey: .open) ?? []
+        }
     }
 
     public let overrides: Overrides

@@ -8,6 +8,12 @@
   and the TSE year-end closure are computed from the rules. Each chip can be
   turned off under Settings ▸ World markets. In a narrow window the countdowns
   drop first; during the opening range the bar keeps the whole row.
+- London and Tokyo overrides: `"london"` and `"tokyo"` objects in
+  `calendar-overrides.json` take `closed`, `earlyClose` and `open` lists, like
+  NYSE. Every list in the file is now optional.
+- Optional daily check of the official GOV.UK bank holidays and Japanese Cabinet
+  Office holiday lists, which brings in one-off closures the rules can't
+  predict. Off by default; no key needed.
 
 ## 0.2.0 — 2026-10-03
 

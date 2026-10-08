@@ -22,6 +22,8 @@ final class AppSettings {
     var candleTickMinutes: Int { didSet { d.set(candleTickMinutes, forKey: "candleTickMinutes") } }
     /// Polygon.io key for the optional online holiday check; empty means off.
     var polygonAPIKey: String { didSet { d.set(polygonAPIKey, forKey: "polygonAPIKey") } }
+    /// Daily check of the GOV.UK and Japanese Cabinet Office holiday lists.
+    var checkWorldHolidays: Bool { didSet { d.set(checkWorldHolidays, forKey: "checkWorldHolidays") } }
     /// World markets whose chip is switched off, by id ("LDN", "TYO").
     private var hiddenMarkets: Set<String> { didSet { d.set(Array(hiddenMarkets), forKey: "hiddenMarkets") } }
     private var silentEvents: Set<String> { didSet { d.set(Array(silentEvents), forKey: "silentEvents") } }
@@ -40,6 +42,7 @@ final class AppSettings {
         showCountdown = d.bool(forKey: "showCountdown")
         candleTickMinutes = d.integer(forKey: "candleTickMinutes")
         polygonAPIKey = d.string(forKey: "polygonAPIKey") ?? ""
+        checkWorldHolidays = d.bool(forKey: "checkWorldHolidays")
         hiddenMarkets = Set(d.stringArray(forKey: "hiddenMarkets") ?? [])
         silentEvents = Set(d.stringArray(forKey: "silentEvents") ?? [])
         spokenEvents = Set(d.stringArray(forKey: "spokenEvents") ?? [])

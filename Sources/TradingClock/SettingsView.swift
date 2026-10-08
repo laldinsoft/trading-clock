@@ -12,6 +12,11 @@ struct SettingsView: View {
         return "\(model.sync.status) · checked \(t.formatted(date: .abbreviated, time: .shortened))"
     }
 
+    private var worldSyncStatus: String {
+        guard settings.checkWorldHolidays, let t = model.worldSync.lastChecked else { return model.worldSync.status }
+        return "\(model.worldSync.status) · checked \(t.formatted(date: .abbreviated, time: .shortened))"
+    }
+
     var body: some View {
         Form {
             Section("Sound") {
@@ -57,6 +62,16 @@ struct SettingsView: View {
                 }
                 Text("A small chip beside the session line says whether the market is open and when that changes, in New York time. Hidden during the opening range.")
                     .font(.caption).foregroundStyle(.secondary)
+                Toggle("Check official holiday lists daily", isOn: $settings.checkWorldHolidays)
+                    .onChange(of: settings.checkWorldHolidays) { _, _ in model.worldSync.enabledChanged() }
+                HStack {
+                    Text(worldSyncStatus).font(.caption).foregroundStyle(.secondary)
+                    Spacer()
+                    Button("Check now") { Task { await model.worldSync.refresh() } }.controlSize(.small)
+                        .disabled(!settings.checkWorldHolidays)
+                }
+                Text("Holidays are computed from the rules. The check adds one-off days such as a coronation, from GOV.UK's bank holidays and the Japanese Cabinet Office. No key or account is needed. Manual entries go in the overrides file below, under \"london\" and \"tokyo\".")
+                    .font(.caption).foregroundStyle(.secondary)
             }
             Section("Calendar") {
                 Text("NYSE holidays and 13:00 closes are computed from the exchange rules, so nothing needs updating each year. Two optional layers catch unscheduled closures:")
@@ -87,7 +102,7 @@ struct SettingsView: View {
                         Button("Reload") { model.reloadCalendar() }.controlSize(.small)
                     }
                 }
-                Text("A JSON file with \"closed\", \"earlyClose\" and \"open\" lists of ISO dates.")
+                Text("A JSON file with \"closed\", \"earlyClose\" and \"open\" lists of ISO dates for NYSE, and the same lists inside \"london\" and \"tokyo\" objects.")
                     .font(.caption).foregroundStyle(.secondary)
             }
         }
