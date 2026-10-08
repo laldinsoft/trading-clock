@@ -67,7 +67,25 @@ struct ClockView: View {
     private func infoLine(_ layout: Layout) -> some View {
         if let range = model.range {
             RangeBar(progress: range, height: layout.info)
-        } else if settings.showCountdown {
+        } else {
+            HStack(spacing: layout.info * 0.5) {
+                sessionText(layout).layoutPriority(1)
+                if !model.worldChips.isEmpty {
+                    Spacer(minLength: 0)
+                    // Drop the countdowns, then the chips, before squeezing the session line.
+                    ViewThatFits(in: .horizontal) {
+                        chipRow(layout, countdowns: true)
+                        chipRow(layout, countdowns: false)
+                        Color.clear.frame(width: 0, height: 0)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func sessionText(_ layout: Layout) -> some View {
+        if settings.showCountdown {
             Text(model.countdownLine)
                 .foregroundStyle(Theme.secondary)
                 .font(.system(size: layout.info * 0.62, weight: .medium).monospacedDigit())
@@ -81,6 +99,15 @@ struct ClockView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.4)
         }
+    }
+
+    private func chipRow(_ layout: Layout, countdowns: Bool) -> some View {
+        HStack(spacing: layout.info * 0.25) {
+            ForEach(model.worldChips) { chip in
+                MarketChip(chip: chip, size: layout.info * 0.40, showsCountdown: countdowns)
+            }
+        }
+        .fixedSize()
     }
 
     /// Font and row sizes derived from the window so the clock fills whatever size it is given.
@@ -97,6 +124,39 @@ struct ClockView: View {
             gap = showInfo ? digit * 0.02 : 0
             padding = 12
         }
+    }
+}
+
+/// "● LDN closes 11:30 · 3h 15m". A filled dot when open, a ring at Tokyo's lunch,
+/// and the whole chip faded when closed.
+struct MarketChip: View {
+    let chip: WorldChip
+    let size: CGFloat
+    let showsCountdown: Bool
+
+    var body: some View {
+        let color = Theme.market(chip.id)
+        let open = chip.state == .open
+        HStack(spacing: size * 0.4) {
+            Group {
+                if chip.state == .lunch {
+                    Circle().strokeBorder(color, lineWidth: max(1, size * 0.12))
+                } else {
+                    Circle().fill(open ? color : Theme.digits(for: .closed))
+                }
+            }
+            .frame(width: size * 0.5, height: size * 0.5)
+            Text(chip.id).fontWeight(.bold).tracking(size * 0.08)
+            + Text(" \(chip.label)")
+            + Text(showsCountdown && chip.countdown != nil ? " · \(chip.countdown!)" : "")
+        }
+        .font(.system(size: size, weight: .medium).monospacedDigit())
+        .foregroundStyle(open ? Color(hex: 0xF4F2EC) : Theme.secondary)
+        .lineLimit(1)
+        .padding(.horizontal, size * 0.65)
+        .padding(.vertical, size * 0.25)
+        .background(open ? color.opacity(0.14) : Color.white.opacity(0.03), in: Capsule())
+        .opacity(chip.state == .closed ? 0.6 : 1)
     }
 }
 

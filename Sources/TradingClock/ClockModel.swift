@@ -20,6 +20,8 @@ final class ClockModel {
     /// The event that just fired; cleared a few seconds later so the view can flash it.
     private(set) var justFired: EventKind?
     private(set) var holidayName: String?
+    /// London and Tokyo, as chips beside the session line.
+    private(set) var worldChips: [WorldChip] = []
 
     /// Simulation: added to the real time so transitions can be previewed.
     var offset: TimeInterval = 0 { didSet { lastTick = nil; tick() } }
@@ -135,6 +137,7 @@ final class ClockModel {
         nextBoundary = calendar.nextBoundary(after: now)
         countdownLine = nextBoundary.map { Countdown.line(to: $0, from: now) } ?? ""
         statusLine = Self.status(phase: phase, session: session, day: day, holiday: holidayName)
+        worldChips = WorldMarket.all.filter(settings.shows).map { WorldChip(market: $0, now: now) }
 
         guard let previous else { return }
         // Only announce what fell inside a normal tick. After sleep or a simulation
@@ -169,6 +172,20 @@ final class ClockModel {
         DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in
             if self?.justFired == kind { self?.justFired = nil }
         }
+    }
+}
+
+/// One market chip: "● LDN closes 11:30 · 3h 15m".
+struct WorldChip: Equatable, Identifiable {
+    let id: String
+    let state: WorldMarket.Status.State
+    let label: String
+    let countdown: String?
+
+    init(market: WorldMarket, now: Date) {
+        id = market.id
+        state = market.status(at: now).state
+        (label, countdown) = market.chip(at: now)
     }
 }
 

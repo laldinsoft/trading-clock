@@ -24,6 +24,11 @@ boundary, and walks the opening range with a stage bar and a calm voice.
 - **Session line** the rest of the day: "Pre-market", "Open", "After-hours", "Closed",
   with a note when the day is unusual: "Closed · Thanksgiving Day", "Open · Early
   close 13:00". A countdown to the next boundary can replace it in Settings.
+- **London and Tokyo at a glance.** Two small chips beside the session line say
+  whether each market is open and when that changes, in New York time:
+  "LDN closes 11:30 · 3h 15m", "TYO lunch 22:30". Exchange hours, holidays, Tokyo's
+  lunch break and the weeks when UK and US clocks disagree are all handled. Either
+  chip can be switched off in Settings; both step aside for the opening-range bar.
 - **Calendar built in.** NYSE holidays and 13:00 early closes are computed from the
   exchange rules, so nothing needs updating each year. Unscheduled closures can be
   pulled from Polygon.io with a free key, or added by hand.
@@ -91,7 +96,7 @@ Two optional layers sit on top of the rule-based NYSE calendar:
 
 | Path | What |
 |---|---|
-| `Sources/TradingClockCore` | Pure logic: NYSE calendar rules, session phases, events, range stages, Polygon parser. Unit-tested. |
+| `Sources/TradingClockCore` | Pure logic: NYSE calendar rules, session phases, events, range stages, London and Tokyo hours and holidays, Polygon parser. Unit-tested. |
 | `Sources/TradingClock` | The app: floating panel, SwiftUI clock view, sounds, settings, menu, calendar sync. |
 | `Tests` | `swift test` |
 | `Resources/Sounds` | The chimes, 44.1 kHz mono WAV, peaks at -14 dBFS. |

@@ -92,13 +92,13 @@ public struct NYSECalendar: Sendable {
         }
     }
 
-    private func nth(_ n: Int, weekday: Int, month: Int, year: Int) -> Day {
+    func nth(_ n: Int, weekday: Int, month: Int, year: Int) -> Day {
         let first = Day(year, month, 1)
         let offset = (weekday - first.weekday + 7) % 7
         return first.adding(days: offset + (n - 1) * 7)
     }
 
-    private func last(weekday: Int, month: Int, year: Int) -> Day {
+    func last(weekday: Int, month: Int, year: Int) -> Day {
         let nextMonthStart = month == 12 ? Day(year + 1, 1, 1) : Day(year, month + 1, 1)
         let lastDay = nextMonthStart.adding(days: -1)
         let back = (lastDay.weekday - weekday + 7) % 7

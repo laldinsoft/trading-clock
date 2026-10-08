@@ -51,6 +51,13 @@ struct SettingsView: View {
                     .disabled(!settings.showInfoLine)
                 Text("Drag anywhere to move; drag an edge to resize. Right-click for the menu.").font(.caption).foregroundStyle(.secondary)
             }
+            Section("World markets") {
+                ForEach(WorldMarket.all) { market in
+                    Toggle(market.title, isOn: Binding(get: { settings.shows(market) }, set: { settings.setShows(market, $0) }))
+                }
+                Text("A small chip beside the session line says whether the market is open and when that changes, in New York time. Hidden during the opening range.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
             Section("Calendar") {
                 Text("NYSE holidays and 13:00 closes are computed from the exchange rules, so nothing needs updating each year. Two optional layers catch unscheduled closures:")
                     .font(.caption).foregroundStyle(.secondary)

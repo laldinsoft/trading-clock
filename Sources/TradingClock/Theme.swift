@@ -29,6 +29,11 @@ enum Theme {
         }
     }
 
+    /// World market chips: cyan for London, coral for Tokyo, both away from the NY and range hues.
+    static func market(_ id: String) -> Color {
+        id == "TYO" ? Color(hex: 0xE0907A) : Color(hex: 0x5FB7C9)
+    }
+
     static func event(_ kind: EventKind) -> Color {
         switch kind {
         case .preMarketOpen: return digits(for: .preMarket)

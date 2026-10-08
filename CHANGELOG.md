@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- London and Tokyo chips beside the session line: open, lunch or closed, and
+  the next change in New York time with a countdown. LSE bank holidays and
+  half days, Japanese holidays (equinoxes, substitute and citizens' holidays)
+  and the TSE year-end closure are computed from the rules. Each chip can be
+  turned off under Settings ▸ World markets. In a narrow window the countdowns
+  drop first; during the opening range the bar keeps the whole row.
+
 ## 0.2.0 — 2026-10-03
 
 - App icon: a 24-hour dial whose rim is coloured by the New York sessions,

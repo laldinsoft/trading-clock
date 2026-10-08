@@ -22,6 +22,8 @@ final class AppSettings {
     var candleTickMinutes: Int { didSet { d.set(candleTickMinutes, forKey: "candleTickMinutes") } }
     /// Polygon.io key for the optional online holiday check; empty means off.
     var polygonAPIKey: String { didSet { d.set(polygonAPIKey, forKey: "polygonAPIKey") } }
+    /// World markets whose chip is switched off, by id ("LDN", "TYO").
+    private var hiddenMarkets: Set<String> { didSet { d.set(Array(hiddenMarkets), forKey: "hiddenMarkets") } }
     private var silentEvents: Set<String> { didSet { d.set(Array(silentEvents), forKey: "silentEvents") } }
     private var spokenEvents: Set<String> { didSet { d.set(Array(spokenEvents), forKey: "spokenEvents") } }
 
@@ -38,10 +40,13 @@ final class AppSettings {
         showCountdown = d.bool(forKey: "showCountdown")
         candleTickMinutes = d.integer(forKey: "candleTickMinutes")
         polygonAPIKey = d.string(forKey: "polygonAPIKey") ?? ""
+        hiddenMarkets = Set(d.stringArray(forKey: "hiddenMarkets") ?? [])
         silentEvents = Set(d.stringArray(forKey: "silentEvents") ?? [])
         spokenEvents = Set(d.stringArray(forKey: "spokenEvents") ?? [])
     }
 
+    func shows(_ market: WorldMarket) -> Bool { !hiddenMarkets.contains(market.id) }
+    func setShows(_ market: WorldMarket, _ on: Bool) { if on { hiddenMarkets.remove(market.id) } else { hiddenMarkets.insert(market.id) } }
     func chimes(_ kind: EventKind) -> Bool { !silentEvents.contains(kind.key) }
     func setChimes(_ kind: EventKind, _ on: Bool) { if on { silentEvents.remove(kind.key) } else { silentEvents.insert(kind.key) } }
     func speaks(_ kind: EventKind) -> Bool { spokenEvents.contains(kind.key) }
