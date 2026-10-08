@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-10-08
 
 - London and Tokyo chips beside the session line: open, lunch or closed, and
   the next change in New York time with a countdown. LSE bank holidays and
